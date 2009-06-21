@@ -21,3 +21,7 @@ sound pressure, p = square root ( I x Z )
 SPL = 20 x log10 x ( p / p0 )
 
 where p0 = 0.00002
+
+== REFERENCE ==
+
+Wikipedia : http://en.wikipedia.org/wiki/Sound_pressure
