@@ -7,7 +7,7 @@ Sound Pressure Level Meter : SPL Meter is a device used to measure the environme
  SPL Meter is a very expensive equipment. This software version of the SPL Meter can be used by amateurs to simulate the actual SPL Meter. 
  
 == FORMULA ==
-
+{{{
 I = Z x w x w x A x A
 
 Z -> acoustic impedance = about 406.2 for air at 30 degree celcius
@@ -21,7 +21,7 @@ sound pressure, p = square root ( I x Z )
 SPL = 20 x log10 x ( p / p0 )
 
 where p0 = 0.00002
-
+}}}
 == REFERENCE ==
 
 Wikipedia : http://en.wikipedia.org/wiki/Sound_pressure
