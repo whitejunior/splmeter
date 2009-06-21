@@ -65,7 +65,7 @@ public class Recorder implements Runnable {
 	         int bufferRead = 0;
 	         //int bufferSize = AudioRecord.getMinBufferSize(this.getFrequency(),
 	         //          this.getChannelConfiguration(), this.getAudioEncoding());
-	         int bufferSize = 2048;
+	         int bufferSize = 4096;//2048;
 	         
 	         recordInstance = new AudioRecord(
 	                   MediaRecorder.AudioSource.MIC, this.getFrequency(), this
@@ -170,7 +170,7 @@ public class Recorder implements Runnable {
     	Complex[] xf = new Complex[bsize];
     	xf = FFT.fft(x);
     	
-    	for( i = 0; i < bsize; i++ ){
+    	for( i = 0; i < bsize/2; i++ ){
     		w = xf[i].abs();
     		if ( w > max ){
     			max_index = i;
@@ -180,13 +180,14 @@ public class Recorder implements Runnable {
     	// Frequency and Amp of fundamental frequency
     	frequency = max_index;
     	amplitude = xf[max_index].abs()*2/bsize;
+    	    	
+    	I  = Z*2*2*Math.PI*Math.PI*frequency*frequency*amplitude*amplitude;
+    	P  = Math.sqrt(Z*I);
+        if ( P != 0 ) 
+        	Istar = round(20*Math.log10(P/P0)/10,3);  // divide by 10 to correct the calculation
+        
     	
-    	frequency = 2;
-    	I  = 2*Z*Math.PI*Math.PI*frequency*frequency*amplitude*amplitude;
-    	P  = Math.sqrt(2*Z*I);
-    	Istar = round(20*Math.log10(P/P0),3);  
-    	
-    	Message msg = handle.obtainMessage(MY_MSG,"\n\n\n"+Istar+ " db SPL");
+    	Message msg = handle.obtainMessage(MY_MSG,"\n\n"+Istar+ " db SPL");
 		handle.sendMessage(msg);
     }
     
