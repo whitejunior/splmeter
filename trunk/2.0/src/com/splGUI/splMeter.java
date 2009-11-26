@@ -306,7 +306,7 @@ public class splMeter extends Activity
       {
          if (log)
          {
-            splLogButton.setTextColor(Color.WHITE);
+            splLogButton.setTextColor(Color.parseColor("#6D7B8D"));
             log = false;
             handle_log(false);
             
@@ -333,7 +333,7 @@ public class splMeter extends Activity
       {
          if (calib)
          {
-            splCalibButton.setTextColor(Color.WHITE);
+            splCalibButton.setTextColor(Color.parseColor("#6D7B8D"));
             splCalibUpButton.setVisibility(View.INVISIBLE);
             splCalibDownButton.setVisibility(View.INVISIBLE);
             splMaxButton.setVisibility(View.VISIBLE);
@@ -412,7 +412,7 @@ public class splMeter extends Activity
          {
             stop_meter();
             splOnOffButton.setText("ON");
-            splOnOffButton.setTextColor(Color.WHITE);
+            splOnOffButton.setTextColor(Color.parseColor("#6D7B8D"));
             splModeTV.setText("");
             splModeTV.setBackgroundColor(Color.GRAY);
             splDataTV.setText("");
@@ -458,7 +458,7 @@ public class splMeter extends Activity
          case MAXOVER_MSG:
             max = false;
             handle_mode_display();
-            splMaxButton.setTextColor(Color.WHITE);
+            splMaxButton.setTextColor(Color.parseColor("#6D7B8D"));
             break;
          default:
             super.handleMessage(msg);
