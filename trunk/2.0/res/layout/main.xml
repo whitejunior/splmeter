@@ -8,9 +8,9 @@
 <TableLayout android:id="@+id/TableLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content"><TableRow android:id="@+id/TableRow01" android:layout_height="wrap_content" android:clickable="false" android:focusable="false" android:layout_width="fill_parent">
 
 
-<Button android:hapticFeedbackEnabled="false" android:text="ON" android:textColor="@color/textColor" android:layout_marginBottom="10px" android:clickable="true" android:cursorVisible="false" android:ellipsize="start" android:fadingEdge="vertical" android:focusable="true" android:focusableInTouchMode="true" android:layout_marginTop="20px" android:id="@+id/splOnOffB" android:layout_height="70px" android:layout_width="80px" android:layout_marginLeft="10px" android:layout_marginRight="30px"></Button>
+<Button android:hapticFeedbackEnabled="false" android:text="ON" android:layout_marginBottom="10px" android:clickable="true" android:cursorVisible="false" android:ellipsize="start" android:fadingEdge="vertical" android:focusable="true" android:focusableInTouchMode="true" android:layout_marginTop="20px" android:id="@+id/splOnOffB" android:layout_height="70px" android:layout_width="80px" android:layout_marginLeft="10px" android:layout_marginRight="30px" android:textColor="@color/buttonText"></Button>
 
-<Button android:text="LOG" android:textColor="@color/textColor" android:id="@+id/splLogB" android:visibility="visible" android:layout_height="70px" android:layout_width="80px" android:layout_marginTop="20px" android:layout_marginLeft="20px"></Button><Button android:text="MAX" android:textColor="@color/textColor" android:layout_marginTop="20px" android:id="@+id/splMaxB" android:visibility="visible" android:layout_width="80px" android:layout_height="70px"></Button>
+<Button android:text="LOG" android:id="@+id/splLogB" android:visibility="visible" android:layout_height="70px" android:layout_width="80px" android:layout_marginTop="20px" android:layout_marginLeft="20px" android:textColor="@color/buttonText"></Button><Button android:text="MAX" android:layout_marginTop="20px" android:id="@+id/splMaxB" android:visibility="visible" android:layout_width="80px" android:layout_height="70px" android:textColor="@color/buttonText"></Button>
 
 
 
@@ -27,7 +27,7 @@
 <Button android:layout_marginLeft="10px" android:id="@+id/splModeB" android:text="SLOW" android:visibility="visible" android:layout_width="80px" android:layout_height="70px" android:layout_marginRight="30px"></Button>
 <Button android:text="Button03" android:id="@+id/Button03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="invisible"></Button>
 
-<Button android:text="CALIB" android:padding="2px" android:textColor="@color/textColor" android:id="@+id/splCalibB" android:visibility="visible" android:layout_height="70px" android:layout_width="80px"></Button></TableRow><TableRow android:id="@+id/TableRow04" android:layout_width="wrap_content" android:layout_height="wrap_content"><Button android:text="Button01" android:id="@+id/Button01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="invisible"></Button></TableRow><TableRow android:id="@+id/TableRow03" android:layout_width="wrap_content" android:layout_height="wrap_content">
+<Button android:text="CALIB" android:padding="2px" android:id="@+id/splCalibB" android:visibility="visible" android:layout_height="70px" android:layout_width="80px" android:textColor="@color/buttonText"></Button></TableRow><TableRow android:id="@+id/TableRow04" android:layout_width="wrap_content" android:layout_height="wrap_content"><Button android:text="Button01" android:id="@+id/Button01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="invisible"></Button></TableRow><TableRow android:id="@+id/TableRow03" android:layout_width="wrap_content" android:layout_height="wrap_content">
 
 
 

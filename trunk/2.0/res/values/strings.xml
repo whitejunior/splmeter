@@ -7,4 +7,5 @@
 <dimen name="splTVlayourmargin">10px</dimen>
 <dimen name="splTVtextsize">50px</dimen>
 
+<color name="buttonText">#6D7B8D</color>
 </resources>
