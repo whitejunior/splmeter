@@ -32,7 +32,6 @@ import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 /**
  * 
@@ -44,7 +43,7 @@ public class SplEngine extends Thread {
 	private static final int CHANNEL = AudioFormat.CHANNEL_CONFIGURATION_MONO;
 	private static final int ENCODING = AudioFormat.ENCODING_PCM_16BIT;
 	private static final int MY_MSG = 1;
-	protected static final int MAXOVER_MSG = 2;
+	private static final int MAXOVER_MSG = 2;
 	private int BUFFSIZE = 4096;
 	private static final double P0 = 0.000002;
 
@@ -52,14 +51,14 @@ public class SplEngine extends Thread {
 	private static final int CALIB_DEFAULT = -80;
 	private int mCaliberationValue = CALIB_DEFAULT;
 
-	public volatile boolean mIsRunning = false;
+	private volatile boolean mIsRunning = false;
 	private Handler mHandle = null;
 
 	private double mMaxValue = 0.0;
-	public volatile boolean mShowMaxValue = false;
+	private volatile boolean mShowMaxValue = false;
 
-	private FileWriter splLog = null;
-	private volatile boolean isLogging = false;
+	private FileWriter mSplLog = null;
+	private volatile boolean mIsLogging = false;
 	private static String LOGPATH = "/sdcard/splmeter_";
 	private int LOGLIMIT = 50;
 	private int logCount = 0;
@@ -70,37 +69,42 @@ public class SplEngine extends Thread {
 	Context mContext = null;
 	String PREFS_NAME = "SPLMETER";
 
+	
 	public SplEngine(Handler handle, Context context) {
 		this.mHandle = handle;
 		this.mContext = context;
 		this.mCaliberationValue = readCalibValue();
 		this.mode = "FAST";
-		this.isLogging = false;
+		this.mIsLogging = false;
 		this.mIsRunning = false;
 		this.mMaxValue = 0.0;
 		this.mShowMaxValue = false;
-		//
-		// android.os.Process
-		// .setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
-		mRecordInstance = new AudioRecord(MediaRecorder.AudioSource.MIC,
-				FREQUENCY, CHANNEL, ENCODING, FREQUENCY);
+		
+		mRecordInstance = new AudioRecord(
+								MediaRecorder.AudioSource.MIC,
+								FREQUENCY, CHANNEL, 
+								ENCODING, FREQUENCY);
 	}
+	
+	
 
 	/**
-	 * Reset the Engine by deleting all calibration details and resetting it to
-	 * a default value
+	 * Reset the Engine by deleting all calibration details 
+	 * and resetting it to a default value
 	 */
 	public void reset() {
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt("CalibSlow", 0);
+		editor.putInt("CalibSlow", CALIB_DEFAULT);
 
-		editor.putInt("CalibFast", 0);
+		editor.putInt("CalibFast", CALIB_DEFAULT);
 		editor.commit();
 		mCaliberationValue = CALIB_DEFAULT;
 	}
 
+	
+	
 	/**
 	 * starts the engine.
 	 */
@@ -109,17 +113,19 @@ public class SplEngine extends Thread {
 		this.start();
 	}
 
+	
+	
 	/**
 	 * stops the engine
 	 */
 	public void stop_engine() {
 		this.mIsRunning = false;
-		mRecordInstance.stop();
 	}
 
+	
+	
 	/**
-	 * sets mode as fast or slow
-	 * 
+	 * sets mode as fast or slow	 
 	 * @param mode
 	 */
 	public void setMode(String mode) {
@@ -135,47 +141,42 @@ public class SplEngine extends Thread {
 		}
 	}
 
+	
+	
 	/**
-	 * Returns the current calibration value
-	 * 
+	 * Returns the current calibration value	 
 	 * @return
 	 */
 	public int getCalibValue() {
 		return mCaliberationValue;
 	}
 
+	
+	
 	/**
 	 * Sets the calibration value to a value passed.
-	 * 
 	 * @param value
 	 */
 	public void setCalibValue(int value) {
 		mCaliberationValue = value;
 	}
 
+	
+	
 	/**
-	 * Reads the calibration details from the settings file. separate files used
-	 * for slow and fast mode if files doesn't exits, sets calibration to a
-	 * default value
-	 * 
+	 * Read the calibration values 
 	 * @return
 	 */
-	public int readCalibValue() {
-		
+	public int readCalibValue() {		
 		SharedPreferences settings = mContext
 										.getSharedPreferences(
 												PREFS_NAME, 
-												Context.MODE_WORLD_READABLE);
-		int calibValue = 0;
-
-		if ("SLOW".equals(mode)) {
-			calibValue = settings.getInt("calibSlow", CALIB_DEFAULT);
-		} else {
-			calibValue = settings.getInt("calibFast", CALIB_DEFAULT);
-		}
-		return calibValue;
+												Context.MODE_WORLD_READABLE);	
+		return settings.getInt(mode, CALIB_DEFAULT);
 	}
 
+	
+	
 	/**
 	 * Stores the current calibration value to a file separate calibration for
 	 * SLOW and FAST modes
@@ -186,16 +187,12 @@ public class SplEngine extends Thread {
 												PREFS_NAME, 
 												Context.MODE_WORLD_WRITEABLE);
 		SharedPreferences.Editor editor = settings.edit();
-
-		if ("SLOW".equals(mode)) {
-			editor.putInt("CalibSlow", 0);
-		} else {
-			editor.putInt("CalibFast", 0);
-		}
-
+		editor.putInt(mode, mCaliberationValue);
 		editor.commit();
 	}
 
+	
+	
 	/**
 	 * Increase the calibration by an fixed increment
 	 */
@@ -206,8 +203,10 @@ public class SplEngine extends Thread {
 		}
 	}
 
+	
+	
 	/**
-	 * Descrease the calibration by a fixed value
+	 * Decrease the calibration by a fixed value
 	 */
 	public void calibDown() {
 		mCaliberationValue = mCaliberationValue - CALIB_INCREMENT;
@@ -216,67 +215,77 @@ public class SplEngine extends Thread {
 		}
 	}
 
-	/* Display max value for 2 seconds and then resume */
+	
+	/**
+	 *  Display max value for 2 seconds and then resume 
+	 */
 	public double showMaxValue() {
 		mShowMaxValue = true;
 		return mMaxValue;
 	}
 
+	
 	/**
-	 * Get the maximum value recorded so far
-	 * 
+	 * Get the maximum value recorded so far	 
 	 * @return
 	 */
 	public double getMaxValue() {
 		return mMaxValue;
 	}
+	
 
-	/*
+	/**
 	 * Sets the max value of SPL
 	 */
 	public void setMaxValue(double max) {
 		mMaxValue = max;
 	}
 
-	/*
+	
+	/**
 	 * Start logging the values to a log file
 	 */
 	public void startLogging() {
-		isLogging = true;
+		mIsLogging = true;
 	}
 
-	/*
+	
+	
+	/**
 	 * Stop the logging
 	 */
 	public void stopLogging() {
-		isLogging = false;
+		mIsLogging = false;
 	}
 
-	/*
-	 * If logging, then store the spl values to a log file. separate log file
-	 * for each day.
+	
+	
+	/**
+	 * If logging, then store the spl values to a log file. 
+	 * separate log file for each day.
 	 */
 	private void writeLog(double value) {
-		if (isLogging) {
+		if (mIsLogging) {
 			if (logCount++ > LOGLIMIT) {
 				try {
 					Date now = new Date();
 
-					splLog = new FileWriter(LOGPATH + now.getDate() + "_"
+					mSplLog = new FileWriter(LOGPATH + now.getDate() + "_"
 							+ now.getMonth() + "_" + (now.getYear() + 1900)
 							+ ".xls", true);
-					splLog.append(value + "\n");
-					splLog.close();
+					mSplLog.append(value + "\n");
+					mSplLog.close();
 
 				} catch (Exception e) {
-
+						e.printStackTrace();
 				}
 				logCount = 0;
 			}
 		}
 	}
 
-	/*
+	
+	/**
 	 * The main thread. Records audio and calculates the SPL The heart of the
 	 * Engine.
 	 */
@@ -322,15 +331,16 @@ public class SplEngine extends Thread {
 				writeLog(splValue);
 			}
 
-			mRecordInstance.stop();
 		} catch (Exception e) {
-			mRecordInstance.stop();
-			mRecordInstance.release();
-			mRecordInstance = null;
+			e.printStackTrace();
 		}
+		mRecordInstance.stop();
+		mRecordInstance.release();
+		mRecordInstance = null;
 	}
 
-	/*
+	
+	/**
 	 * Utility function for rounding decimal values
 	 */
 	public double round(double d, int decimalPlace) {
