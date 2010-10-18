@@ -161,9 +161,7 @@ public class SplEngine extends Thread {
 	 * @return
 	 */
 	public int readCalibValue() {
-		if(mContext == null) {
-			Log.e("splmeter","NULLLLL");
-		}
+		
 		SharedPreferences settings = mContext
 										.getSharedPreferences(
 												PREFS_NAME, 
