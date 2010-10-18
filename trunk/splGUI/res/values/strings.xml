@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, splGUI!</string>
+    <string name="app_name">SPL Meter FREE</string>
+<color name="textColor">#FFFFFF</color>
+<color name="backColor">#3BB9FF</color>
+<dimen name="splTVlayourmargin">10px</dimen>
+<dimen name="splTVtextsize">50px</dimen>
+
+<color name="buttonText">#6D7B8D</color>
+</resources>
