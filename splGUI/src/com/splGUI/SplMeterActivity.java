@@ -510,7 +510,7 @@ public class SplMeterActivity extends Activity {
 				+ "\n\nSLOW button-toggle between fast and slow modes.";
 
 		alertDialog.setMessage(message);
-		// alertDialog.setIcon(R.drawable.logo);
+		alertDialog.setIcon(R.drawable.icon);
 		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 
