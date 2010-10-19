@@ -32,7 +32,6 @@ import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 /**
  * 
