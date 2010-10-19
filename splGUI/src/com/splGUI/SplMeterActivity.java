@@ -69,6 +69,8 @@ public class SplMeterActivity extends Activity {
 
 	static final int MY_MSG = 1;
 	static final int MAXOVER_MSG = 2;
+	static final int ERROR_MSG = -1;
+	
 	static int PREFERENCES_GROUP_ID = 0;
 	static final int RESET_OPTION = 1;
 	static final int ABOUT_OPTION = 2;
@@ -217,11 +219,11 @@ public class SplMeterActivity extends Activity {
 	 */
 	public void setMeterMode(String mode) {
 		double maxValue = mEngine.getMaxValue();
-		stop_meter();
-		mEngine = new SplEngine(mhandle, mContext);
+		//stop_meter();
+		//mEngine = new SplEngine(mhandle, mContext);
 		mEngine.setMode(mode);
-		mEngine.setMaxValue(maxValue);
-		mEngine.start_engine();
+		//mEngine.setMaxValue(maxValue);
+		//mEngine.start_engine();
 	}
 
 	/**
@@ -426,6 +428,12 @@ public class SplMeterActivity extends Activity {
 					mMax = false;
 					handle_mode_display();
 					mSplMaxButton.setTextColor(Color.parseColor("#6D7B8D"));
+					break;
+				case ERROR_MSG:
+					Toast.makeText(
+							mContext, 
+							"Error " + msg.obj, Toast.LENGTH_LONG).show();
+					stop_meter();
 					break;
 				default :
 					super.handleMessage(msg);

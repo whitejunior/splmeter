@@ -32,6 +32,7 @@ import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 /**
  * 
@@ -39,12 +40,15 @@ import android.preference.PreferenceManager;
  * 
  */
 public class SplEngine extends Thread {
-	private static final int FREQUENCY = 16000;
+	private static final int FREQUENCY = 44100;
 	private static final int CHANNEL = AudioFormat.CHANNEL_CONFIGURATION_MONO;
 	private static final int ENCODING = AudioFormat.ENCODING_PCM_16BIT;
+	
 	private static final int MY_MSG = 1;
 	private static final int MAXOVER_MSG = 2;
-	private int BUFFSIZE = 4096;
+	private static final int ERROR_MSG = -1;
+	
+	private volatile int BUFFSIZE = 0;
 	private static final double P0 = 0.000002;
 
 	private static final int CALIB_INCREMENT = 3;
@@ -80,10 +84,15 @@ public class SplEngine extends Thread {
 		this.mMaxValue = 0.0;
 		this.mShowMaxValue = false;
 		
+		BUFFSIZE = AudioRecord.getMinBufferSize(
+								FREQUENCY, 
+								CHANNEL, 
+								ENCODING);
+		
 		mRecordInstance = new AudioRecord(
 								MediaRecorder.AudioSource.MIC,
 								FREQUENCY, CHANNEL, 
-								ENCODING, FREQUENCY);
+								ENCODING, BUFFSIZE*2);
 	}
 	
 	
@@ -131,14 +140,22 @@ public class SplEngine extends Thread {
 	public void setMode(String mode) {
 		this.mode = mode;
 		setCalibValue(readCalibValue());
-
+		
 		if ("SLOW".equals(mode)) {
-			BUFFSIZE = 32768;
+			BUFFSIZE = AudioRecord.getMinBufferSize(
+					FREQUENCY, 
+					CHANNEL, 
+					ENCODING)*2;			
 			LOGLIMIT = 10;
 		} else {
-			BUFFSIZE = 4096;
+			BUFFSIZE = AudioRecord.getMinBufferSize(
+					FREQUENCY, 
+					CHANNEL, 
+					ENCODING);			
 			LOGLIMIT = 50;
 		}
+		
+		
 	}
 
 	
@@ -295,13 +312,18 @@ public class SplEngine extends Thread {
 
 			double splValue = 0.0;
 			double rmsValue = 0.0;
-			int SIZE = BUFFSIZE;
-			short[] tempBuffer = new short[SIZE];
+			
 
 			while (this.mIsRunning) {
 				
+				// creating these variables here so that
+				// the mode change can be handled
+				int SIZE = BUFFSIZE;
+				short[] tempBuffer = new short[SIZE];
+				
 				mRecordInstance.read(tempBuffer, 0, SIZE);
-
+				
+				
 				for (int i = 0; i < SIZE - 1; i++) {
 					rmsValue += tempBuffer[i] * tempBuffer[i];
 				}
@@ -333,10 +355,15 @@ public class SplEngine extends Thread {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			Message msg = mHandle.obtainMessage(ERROR_MSG, 
+									e.getLocalizedMessage()+"");
+			mHandle.sendMessage(msg);
 		}
-		mRecordInstance.stop();
-		mRecordInstance.release();
-		mRecordInstance = null;
+		if(mRecordInstance != null){
+			mRecordInstance.stop();
+			mRecordInstance.release();
+			mRecordInstance = null;
+		}
 	}
 
 	
