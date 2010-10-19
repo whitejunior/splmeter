@@ -217,13 +217,8 @@ public class SplMeterActivity extends Activity {
 	/**
 	 * Sets the SPL Meter Mode
 	 */
-	public void setMeterMode(String mode) {
-		double maxValue = mEngine.getMaxValue();
-		//stop_meter();
-		//mEngine = new SplEngine(mhandle, mContext);
+	public void setMeterMode(String mode) {		
 		mEngine.setMode(mode);
-		//mEngine.setMaxValue(maxValue);
-		//mEngine.start_engine();
 	}
 
 	/**
