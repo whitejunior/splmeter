@@ -92,6 +92,12 @@ public class SplEngine extends Thread {
 								MediaRecorder.AudioSource.MIC,
 								FREQUENCY, CHANNEL, 
 								ENCODING, BUFFSIZE*2);
+		
+		// this is for the fast mode
+		BUFFSIZE = AudioRecord.getMinBufferSize(
+				FREQUENCY, 
+				CHANNEL, 
+				ENCODING)*2;
 	}
 	
 	
@@ -144,13 +150,13 @@ public class SplEngine extends Thread {
 			BUFFSIZE = AudioRecord.getMinBufferSize(
 					FREQUENCY, 
 					CHANNEL, 
-					ENCODING)*2;			
+					ENCODING)*30;			
 			LOGLIMIT = 10;
 		} else {
 			BUFFSIZE = AudioRecord.getMinBufferSize(
 					FREQUENCY, 
 					CHANNEL, 
-					ENCODING);			
+					ENCODING)*2;			
 			LOGLIMIT = 50;
 		}
 		
