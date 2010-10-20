@@ -52,7 +52,7 @@ import android.widget.Toast;
  */
 public class SplMeterActivity extends Activity {
 
-	static final String VERSION = "2.8";
+	static final String VERSION = "2.9";
 
 	TextView mSplModeTV = null;
 	TextView mSplDataTV = null;
