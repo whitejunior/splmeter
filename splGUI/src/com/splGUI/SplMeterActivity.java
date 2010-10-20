@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -74,6 +75,7 @@ public class SplMeterActivity extends Activity {
 	static int PREFERENCES_GROUP_ID = 0;
 	static final int RESET_OPTION = 1;
 	static final int ABOUT_OPTION = 2;
+	static final int FEEDBACK_OPTION = 4;
 	static final int EXIT_OPTION = 3;
 
 	SplEngine mEngine = null;
@@ -451,6 +453,8 @@ public class SplMeterActivity extends Activity {
 				android.R.drawable.ic_menu_revert);
 		menu.add(PREFERENCES_GROUP_ID, ABOUT_OPTION, 0, "HELP").setIcon(
 				android.R.drawable.ic_menu_help);
+		menu.add(PREFERENCES_GROUP_ID, FEEDBACK_OPTION, 0, "FEEDBACK").setIcon(
+				android.R.drawable.ic_dialog_email);
 		menu.add(PREFERENCES_GROUP_ID, EXIT_OPTION, 0, "EXIT").setIcon(
 				android.R.drawable.ic_menu_close_clear_cancel);
 
@@ -522,6 +526,49 @@ public class SplMeterActivity extends Activity {
 
 		alertDialog.show();
 	}
+	
+	
+	/**
+     * Display Feedback dialog
+     */
+    public void show_feedback()
+    {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle(getResources().getString(R.string.app_name));
+        String message = "Send us your feedback/enhancement requests/criticisms.." ;
+               
+        
+        alertDialog.setMessage(message);        
+        alertDialog.setIcon(R.drawable.icon);
+        alertDialog.setButton("Feedback", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                sendEmail();
+            }
+        });
+        alertDialog.setButton2("cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+    
+    
+    /**
+     * Send email intent
+     */
+    private void sendEmail()
+    {
+        String subject = "Feedback " + getResources().getString(R.string.app_name);
+        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+        emailIntent .setType("plain/text");
+        emailIntent .putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"hashir@mobware4u.com"});
+        emailIntent .putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+        emailIntent .putExtra(android.content.Intent.EXTRA_TEXT, "");
+        startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+    }
+    
 
 	/**
 	 * Call back function when an menu option is selected.
@@ -533,6 +580,9 @@ public class SplMeterActivity extends Activity {
 				break;
 			case ABOUT_OPTION :
 				show_about();
+				break;
+			case FEEDBACK_OPTION :
+				show_feedback();
 				break;
 			case EXIT_OPTION :
 				stop_meter();
